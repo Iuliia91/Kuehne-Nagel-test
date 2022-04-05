@@ -51,9 +51,8 @@ const StyledDeteilsOfItem = styled.div`
 const DeteilsOfItem = (props) => {
   const element = props.element
   const indexElement = props.indexOFElement
-  console.log()
-  const [isVisible, setVisible] = useState()
   const dispatch = useDispatch()
+
   const initialData = {
     trackingNo: element.trackingNo,
     orderNo: element.orderNo,
@@ -63,23 +62,30 @@ const DeteilsOfItem = (props) => {
     consignee: element.consignee,
     id: indexElement,
   }
-  console.log(initialData)
+
   return (
     <StyledDeteilsOfItem>
       <Formik
         initialValues={initialData}
-        /* validate={(formValues) => {
+        validate={(formValues) => {
           const errorObj = {}
-          let isValid = true
-          const formFields = formValues.email && formValues.password
-          if (!formFields) {
-            isValid = false
-            errorObj.email = 'Field the fields'
-            errorObj.password = 'Field the fields'
+
+          if (!formValues.date) {
+            errorObj.date = 'Field the fields'
+          } else if (!formValues.customer) {
+            errorObj.customer = 'Field the fields'
+          } else if (!formValues.trackingNo) {
+            errorObj.trackingNo = 'Field the fields'
+          } else if (!formValues.orderNo) {
+            errorObj.orderNo = 'Field the fields'
+          } else if (!formValues.status) {
+            errorObj.status = 'Field the fields'
+          } else if (!formValues.consignee) {
+            errorObj.consignee = 'Field the fields'
           }
 
           return errorObj
-        }}*/
+        }}
         onSubmit={(formValues, { resetForm }) => {
           console.log(formValues)
           props.handleCloseElement(false)
@@ -104,7 +110,15 @@ const DeteilsOfItem = (props) => {
               </div>
             </div>
             <div className="button">
-              <button type="submit">Add</button>
+              <button type="submit">Change</button>
+              <button
+                type="button"
+                onClick={() => {
+                  props.handleCloseElement(false)
+                }}
+              >
+                Close
+              </button>
             </div>
           </div>
         </Form>

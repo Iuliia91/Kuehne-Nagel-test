@@ -3,11 +3,12 @@ import deleteItemFromList from '../actions/deleteItemFromList'
 import getDataFromApi from '../actions/dataFromApi'
 import { createReducer } from '@reduxjs/toolkit'
 import updateItem from '../actions/updateItem'
+import { defaultEqualityCheck } from 'reselect'
 const initialState = {
   dataList: [],
   item: '',
 }
-/*[{trackingNo:'234356576',orderNo:'fbfgvbgfnb',date:'ffvjnfv',customer:'sdvfvfdvbfg',status:'fvvfsdvbgfrtbgv',consignee:'gvbrtfbvrtfb'},{trackingNo:'234356576',orderNo:'fbfgvbgfnb',date:'ffvjnfv',customer:'sdvfvfdvbfg',status:'fvvfsdvbgfrtbgv',consignee:'gvbrtfbvrtfb'},{trackingNo:'234356576',orderNo:'fbfgvbgfnb',date:'ffvjnfv',customer:'sdvfvfdvbfg',status:'fvvfsdvbgfrtbgv',consignee:'gvbrtfbvrtfb'},{trackingNo:'234356576',orderNo:'fbfgvbgfnb',date:'ffvjnfv',customer:'sdvfvfdvbfg',status:'fvvfsdvbgfrtbgv',consignee:'gvbrtfbvrtfb'},{trackingNo:'234356576',orderNo:'fbfgvbgfnb',date:'ffvjnfv',customer:'sdvfvfdvbfg',status:'fvvfsdvbgfrtbgv',consignee:'gvbrtfbvrtfb'},{trackingNo:'234356576',orderNo:'fbfgvbgfnb',date:'ffvjnfv',customer:'sdvfvfdvbfg',status:'fvvfsdvbgfrtbgv',consignee:'gvbrtfbvrtfb'},{trackingNo:'234356576',orderNo:'fbfgvbgfnb',date:'ffvjnfv',customer:'sdvfvfdvbfg',status:'fvvfsdvbgfrtbgv',consignee:'gvbrtfbvrtfb'},{trackingNo:'234356576',orderNo:'fbfgvbgfnb',date:'ffvjnfv',customer:'sdvfvfdvbfg',status:'fvvfsdvbgfrtbgv',consignee:'gvbrtfbvrtfb'}]*/
+/**/
 const dataApiReducer = createReducer(initialState, (builder) => {
   builder
     .addCase(getDataFromApi.pending, (state, action) => {})
@@ -25,13 +26,14 @@ const dataApiReducer = createReducer(initialState, (builder) => {
       state.dataList = newCardList
     })
     .addCase(updateItem, (state, action) => {
-      const element = state.dataList.find((card, index) => {
-        index === action.payload.id
-      })
       const newDataList = [...state.dataList]
-      newDataList[action.payload] = action.payload
-      console.log(newDataList[action.payload])
-      state.dataList = [...newDataList]
+      const card = state.dataList.find(
+        (card, index) => index === action.payload.id
+      )
+      const cardIndex = state.dataList.indexOf(card)
+      newDataList[cardIndex] = action.payload
+      console.log(cardIndex)
+      state.dataList = newDataList
     })
 })
 

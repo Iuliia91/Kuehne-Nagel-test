@@ -21,7 +21,7 @@ const StyledFormikInput = styled.div`
     border: none;
     border-radius: 5px;
 
-    // border-color: ${(props) => (props.error ? 'red' : 'white')};
+    border-color: ${(props) => (props.error ? 'red' : 'white')};
     padding: 15px 60px 15px 7px;
     margin: 5px;
     color: grey;
@@ -32,7 +32,7 @@ const StyledFormikInput = styled.div`
 
   .errorMessagerHolder {
     position: absolute;
-    padding-top: -10px;
+    padding-top: 0px;
     color: red;
   }
 `
@@ -54,10 +54,9 @@ const FormikInput = (props) => {
           inputcolor="blue"
         />
       </div>
-
-      {/*  {meta.error && meta.touched && (
+      {meta.error && meta.touched && (
         <div className="errorMessagerHolder">{meta.error}</div>
-      )}*/}
+      )}
     </StyledFormikInput>
   )
 }

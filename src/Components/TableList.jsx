@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -123,10 +123,13 @@ const StyledTableList = styled.div`
 `
 const TableList = (props) => {
   const [elements, setElement] = useState()
-  const [index, setIndex] = useState()
 
+  const [index, setIndex] = useState()
   const [isVisible, setVisible] = useState(false)
+  const [sortField, setSortField] = useState('')
+  const [sortDirection, setSortDirection] = useState(1)
   const dataArr = useSelector((store) => store.dataApiReducer.dataList)
+  const [tableData, setTableData] = useState(dataArr)
   const dispatch = useDispatch()
 
   const handleVisibleElement = (task, index, value) => {
@@ -134,6 +137,26 @@ const TableList = (props) => {
     setElement(task)
     setIndex(index)
   }
+
+  const sortTable = (table) => {
+    const newTable = [...table]
+    newTable.sort((a, b) => {
+      return a > b ? sortDirection : -sortDirection
+    })
+    return newTable
+  }
+  const handleSort = (fieldKey) => () => {
+    if (fieldKey !== sortField) {
+      setSortField(fieldKey)
+      setSortDirection(1)
+    } else {
+      // setSortDirection(-sortDirection)
+    }
+  }
+
+  useEffect(() => {
+    setTableData(sortTable(tableData))
+  }, [sortField, sortDirection])
 
   return (
     <StyledTableList>
@@ -148,22 +171,26 @@ const TableList = (props) => {
         <table className="fl-table">
           {' '}
           <thead>
-            {props.columns.map((column) => {
-              return (
-                <th style={{ width: `${column.width}%` }}>{column.name}</th>
-              )
-            })}
+            <tr>
+              {props.columns.map((column, index) => {
+                return (
+                  <th key={index} onClick={handleSort(column.datakey)}>
+                    {column.name}
+                  </th>
+                )
+              })}
+              <th></th>
+            </tr>
           </thead>{' '}
           <tbody>
-            {dataArr.map((task, index) => {
+            {tableData.map((task, index) => {
               return (
-                <tr>
-                  {props.columns.map((column) => {
-                    return <td>{task[column.datakey]}</td>
+                <tr key={index}>
+                  {props.columns.map((column, index) => {
+                    return <td key={index}>{task[column.datakey]}</td>
                   })}
 
                   <td>
-                    {' '}
                     <FontAwesomeIcon
                       icon={faFileCirclePlus}
                       style={{ color: 'red', padding: 5 }}

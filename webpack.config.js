@@ -70,5 +70,7 @@ module.exports = {
       path.resolve(__dirname, 'node_modules'),
     ],
     extensions: ['.web.js', '.mjs', '.js', '.json', '.web.jsx', '.jsx'],
+    symlinks: false,
+    cacheWithContext: false,
   },
 }
