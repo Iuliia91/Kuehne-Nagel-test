@@ -5,7 +5,7 @@ import TableList from 'Components/TableList'
 import getDataFromApi from 'store/actions/dataFromApi'
 
 const StyledMainLayout = styled.div`
-  max-width: 90%;
+  max-width: 95%;
   margin: auto;
 `
 const StyledLoadingWrapper = styled.div`
@@ -18,32 +18,41 @@ const StyledLoadingWrapper = styled.div`
   font-size: 30px;
 `
 const TASK_TABLE = [
+  { name: 'TRACKUNGNO', datakey: 'trackingNo' },
   { name: 'ORDERNO', datakey: 'orderNo' },
   { name: 'DELIVERYDATE', datakey: 'date' },
   { name: 'CUSTOMER', datakey: 'customer' },
-  { name: 'TRACKUNGNO', datakey: 'trackingNO' },
   { name: 'STATUS', datakey: 'status' },
-  { name: 'CONSIGNE', datakey: ' consignee ' },
+  { name: 'CONSIGNE', datakey: 'consignee' },
 ]
 const MainLayout = () => {
   const dispatch = useDispatch()
   const dataArr = useSelector((store) => store.dataApiReducer.dataList)
-  console.log('hi')
-  /*useEffect(() => {
-    dispatch(getDataFromApi())
-  }, [])*/
+  console.log(dataArr.length)
 
-  /*if (!dataArr) {
+  const LoaderElement = () => {
+    console.log('LoaderElement')
+    useEffect(() => {
+      dispatch(getDataFromApi())
+    }, [])
+
     return (
       <StyledLoadingWrapper>
         <div>Loading...</div>
       </StyledLoadingWrapper>
     )
-  }*/
+  }
+  const Element = () => {
+    if (dataArr.length == 0) {
+      return <LoaderElement />
+    } else if (dataArr.length > 0) {
+      return <TableList columns={TASK_TABLE} />
+    }
+  }
 
   return (
     <StyledMainLayout>
-      <TableList columns={TASK_TABLE} />
+      <Element />
     </StyledMainLayout>
   )
 }

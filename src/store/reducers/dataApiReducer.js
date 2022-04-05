@@ -4,43 +4,10 @@ import getDataFromApi from '../actions/dataFromApi'
 import { createReducer } from '@reduxjs/toolkit'
 import updateItem from '../actions/updateItem'
 const initialState = {
-  dataList: [
-    {
-      orderNo: 87987946,
-      date: '20/05/22',
-      customer: 'fvbfbfb gvfn gvbfdvbff ',
-      trackingNO: '464654677+97+97+97++97+94',
-      status: 'ship',
-      consignee: 'dsgfvbfbhgfhnhbn',
-    },
-    {
-      orderNo: 87987946,
-      date: '20/05/22',
-      customer: 'fvbfbfb gvfn gvbfdvbff ',
-      trackingNO: '464654677+97+97+97++97+94',
-      status: 'ship',
-      consignee: 'dsgfvbfbhgfhnhbn',
-    },
-    {
-      orderNo: 87987946,
-      date: '20/05/22',
-      customer: 'fvbfbfb gvfn gvbfdvbff ',
-      trackingNO: '464654677+97+97+97++97+94',
-      status: 'ship',
-      consignee: 'dsgfvbfbhgfhnhbn',
-    },
-    {
-      orderNo: 87987946,
-      date: '20/05/22',
-      customer: 'fvbfbfb gvfn gvbfdvbff ',
-      trackingNO: '464654677+97+97+97++97+94',
-      status: 'ship',
-      consignee: 'dsgfvbfbhgfhnhbn',
-    },
-  ],
+  dataList: [],
   item: '',
 }
-
+/*[{trackingNo:'234356576',orderNo:'fbfgvbgfnb',date:'ffvjnfv',customer:'sdvfvfdvbfg',status:'fvvfsdvbgfrtbgv',consignee:'gvbrtfbvrtfb'},{trackingNo:'234356576',orderNo:'fbfgvbgfnb',date:'ffvjnfv',customer:'sdvfvfdvbfg',status:'fvvfsdvbgfrtbgv',consignee:'gvbrtfbvrtfb'},{trackingNo:'234356576',orderNo:'fbfgvbgfnb',date:'ffvjnfv',customer:'sdvfvfdvbfg',status:'fvvfsdvbgfrtbgv',consignee:'gvbrtfbvrtfb'},{trackingNo:'234356576',orderNo:'fbfgvbgfnb',date:'ffvjnfv',customer:'sdvfvfdvbfg',status:'fvvfsdvbgfrtbgv',consignee:'gvbrtfbvrtfb'},{trackingNo:'234356576',orderNo:'fbfgvbgfnb',date:'ffvjnfv',customer:'sdvfvfdvbfg',status:'fvvfsdvbgfrtbgv',consignee:'gvbrtfbvrtfb'},{trackingNo:'234356576',orderNo:'fbfgvbgfnb',date:'ffvjnfv',customer:'sdvfvfdvbfg',status:'fvvfsdvbgfrtbgv',consignee:'gvbrtfbvrtfb'},{trackingNo:'234356576',orderNo:'fbfgvbgfnb',date:'ffvjnfv',customer:'sdvfvfdvbfg',status:'fvvfsdvbgfrtbgv',consignee:'gvbrtfbvrtfb'},{trackingNo:'234356576',orderNo:'fbfgvbgfnb',date:'ffvjnfv',customer:'sdvfvfdvbfg',status:'fvvfsdvbgfrtbgv',consignee:'gvbrtfbvrtfb'}]*/
 const dataApiReducer = createReducer(initialState, (builder) => {
   builder
     .addCase(getDataFromApi.pending, (state, action) => {})
@@ -49,12 +16,23 @@ const dataApiReducer = createReducer(initialState, (builder) => {
       state.dataList = action.payload.data
     })
     .addCase(deleteItemFromList, (state, action) => {
-      const card = state.dataList.find((card) => card.id === action.payload)
+      const card = state.dataList.find(
+        (card, index) => index === action.payload
+      )
       const cardIndex = state.dataList.indexOf(card)
       const newCardList = [...state.dataList]
       newCardList.splice(cardIndex, 1)
       state.dataList = newCardList
-    }).addCase
+    })
+    .addCase(updateItem, (state, action) => {
+      const element = state.dataList.find((card, index) => {
+        index === action.payload.id
+      })
+      const newDataList = [...state.dataList]
+      newDataList[action.payload] = action.payload
+      console.log(newDataList[action.payload])
+      state.dataList = [...newDataList]
+    })
 })
 
 export default dataApiReducer

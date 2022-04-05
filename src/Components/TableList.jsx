@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import { faFileCirclePlus } from '@fortawesome/free-solid-svg-icons'
 import deleteItemFromList from 'store/actions/deleteItemFromList'
+import DeteilsOfItem from './DeteilsOfItem'
 const StyledTableList = styled.div`
   background-color: pinck;
   //margin: 20px;
@@ -121,10 +122,28 @@ const StyledTableList = styled.div`
   }
 `
 const TableList = (props) => {
+  const [elements, setElement] = useState()
+  const [index, setIndex] = useState()
+
+  const [isVisible, setVisible] = useState(false)
   const dataArr = useSelector((store) => store.dataApiReducer.dataList)
   const dispatch = useDispatch()
+
+  const handleVisibleElement = (task, index, value) => {
+    setVisible(value)
+    setElement(task)
+    setIndex(index)
+  }
+
   return (
     <StyledTableList>
+      {isVisible && (
+        <DeteilsOfItem
+          element={elements}
+          indexOFElement={index}
+          handleCloseElement={handleVisibleElement}
+        />
+      )}
       <div className="table-wrapper">
         <table className="fl-table">
           {' '}
@@ -142,13 +161,14 @@ const TableList = (props) => {
                   {props.columns.map((column) => {
                     return <td>{task[column.datakey]}</td>
                   })}
+
                   <td>
                     {' '}
                     <FontAwesomeIcon
                       icon={faFileCirclePlus}
                       style={{ color: 'red', padding: 5 }}
                       onClick={() => {
-                        console.log(index)
+                        handleVisibleElement(task, index, true)
                       }}
                     />
                     <FontAwesomeIcon
