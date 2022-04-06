@@ -7,12 +7,14 @@ import updateItem from 'store/actions/updateItem'
 const StyledDeteilsOfItem = styled.div`
   width: 90%;
   height: 100%;
-  //background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: red;
+  font-size: 20px;
   position: absolute;
-  margin: auto;
-  // top: 20%;
-  left: 5%;
-
+  top: ${(props) => props.leftValue};
+  left: ${(props) => props.topValue};
   .form {
     background: white;
     & p {
@@ -27,8 +29,11 @@ const StyledDeteilsOfItem = styled.div`
     background: white;
     display: flex;
     flex-direction: row;
-    //margin:40px;
+
     padding: 50px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
 
     & div {
       width: 100%;
@@ -50,21 +55,22 @@ const StyledDeteilsOfItem = styled.div`
 
 const DeteilsOfItem = (props) => {
   const element = props.element
-  const indexElement = props.indexOFElement
+
   const dispatch = useDispatch()
 
   const initialData = {
-    trackingNo: element.trackingNo,
-    orderNo: element.orderNo,
-    date: element.date,
-    customer: element.customer,
-    status: element.status,
-    consignee: element.consignee,
-    id: indexElement,
+    trackingNo: element.item.trackingNo,
+    orderNo: element.item.orderNo,
+    date: element.item.date,
+    customer: element.item.customer,
+    status: element.item.status,
+    consignee: element.item.consignee,
   }
 
+  let topX = (props.pageX - 1200) * 0.1 + 'px'
+  let leftY = props.pageY - 600 + 'px'
   return (
-    <StyledDeteilsOfItem>
+    <StyledDeteilsOfItem topValue={topX} leftValue={leftY}>
       <Formik
         initialValues={initialData}
         validate={(formValues) => {
@@ -87,9 +93,12 @@ const DeteilsOfItem = (props) => {
           return errorObj
         }}
         onSubmit={(formValues, { resetForm }) => {
-          console.log(formValues)
+          const obj = {
+            item: formValues,
+            index: element.itemIndex,
+          }
           props.handleCloseElement(false)
-          dispatch(updateItem(formValues))
+          dispatch(updateItem(obj))
           resetForm()
         }}
       >

@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import TableList from 'Components/TableList'
 import getDataFromApi from 'store/actions/dataFromApi'
 
 const StyledMainLayout = styled.div`
-  max-width: 95%;
+  max-width: 1400px;
   margin: auto;
 `
 const StyledLoadingWrapper = styled.div`
@@ -28,10 +28,8 @@ const TASK_TABLE = [
 const MainLayout = () => {
   const dispatch = useDispatch()
   const dataArr = useSelector((store) => store.dataApiReducer.dataList)
-  console.log(dataArr.length)
 
   const LoaderElement = () => {
-    console.log('LoaderElement')
     useEffect(() => {
       dispatch(getDataFromApi())
     }, [])
@@ -42,10 +40,11 @@ const MainLayout = () => {
       </StyledLoadingWrapper>
     )
   }
+
   const Element = () => {
-    if (dataArr.length == 0) {
+    if (!dataArr) {
       return <LoaderElement />
-    } else if (dataArr.length > 0) {
+    } else {
       return <TableList columns={TASK_TABLE} />
     }
   }

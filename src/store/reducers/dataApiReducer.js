@@ -5,7 +5,7 @@ import { createReducer } from '@reduxjs/toolkit'
 import updateItem from '../actions/updateItem'
 import { defaultEqualityCheck } from 'reselect'
 const initialState = {
-  dataList: [],
+  dataList: null,
   item: '',
 }
 /**/
@@ -13,27 +13,22 @@ const dataApiReducer = createReducer(initialState, (builder) => {
   builder
     .addCase(getDataFromApi.pending, (state, action) => {})
     .addCase(getDataFromApi.fulfilled, (state, action) => {
-      console.log(action.payload.data)
+      state.dataList = []
       state.dataList = action.payload.data
     })
     .addCase(deleteItemFromList, (state, action) => {
-      const card = state.dataList.find(
-        (card, index) => index === action.payload
-      )
-      const cardIndex = state.dataList.indexOf(card)
-      const newCardList = [...state.dataList]
-      newCardList.splice(cardIndex, 1)
-      state.dataList = newCardList
+      const newlistofProduct = [...state.dataList]
+      newlistofProduct.splice(action.payload, 1)
+      state.dataList = newlistofProduct
     })
+
     .addCase(updateItem, (state, action) => {
       const newDataList = [...state.dataList]
-      const card = state.dataList.find(
-        (card, index) => index === action.payload.id
-      )
-      const cardIndex = state.dataList.indexOf(card)
-      newDataList[cardIndex] = action.payload
-      console.log(cardIndex)
-      state.dataList = newDataList
+
+      newDataList[action.payload.index] = action.payload.item
+      /*  newDataList[action.payload.itemIndex] = action.payload*/
+
+      state.dataList = [...newDataList]
     })
 })
 

@@ -28,7 +28,9 @@ const StyledTableList = styled.div`
     white-space: nowrap;
     background-color: white;
   }
-
+.icon{
+  position.relative;
+}
   .fl-table td,
   .fl-table th {
     text-align: center;
@@ -122,70 +124,54 @@ const StyledTableList = styled.div`
   }
 `
 const TableList = (props) => {
-  const [elements, setElement] = useState()
-
+  const [elements, setElement] = useState({})
+  const [coordinataX, setcoordinataX] = useState(0)
+  const [coordinataY, setcoordinataY] = useState(0)
   const [index, setIndex] = useState()
   const [isVisible, setVisible] = useState(false)
-  const [sortField, setSortField] = useState('')
-  const [sortDirection, setSortDirection] = useState(1)
   const dataArr = useSelector((store) => store.dataApiReducer.dataList)
-  const [tableData, setTableData] = useState(dataArr)
   const dispatch = useDispatch()
 
-  const handleVisibleElement = (task, index, value) => {
-    setVisible(value)
-    setElement(task)
-    setIndex(index)
-  }
+  const handleVisibleElement = (task, indexValue, value) => {
+    //let rect = Event.target.getBoundingClientRect()
+    // console.log(e.pageX)
 
-  const sortTable = (table) => {
-    const newTable = [...table]
-    newTable.sort((a, b) => {
-      return a > b ? sortDirection : -sortDirection
-    })
-    return newTable
-  }
-  const handleSort = (fieldKey) => () => {
-    if (fieldKey !== sortField) {
-      setSortField(fieldKey)
-      setSortDirection(1)
-    } else {
-      // setSortDirection(-sortDirection)
+    const obj = {
+      item: task,
+      itemIndex: indexValue,
     }
+    setVisible(value)
+    setElement(obj)
   }
-
-  useEffect(() => {
-    setTableData(sortTable(tableData))
-  }, [sortField, sortDirection])
+  const handleGetCoordinat = (e) => {
+    setcoordinataX(e.pageX)
+    setcoordinataY(e.pageY)
+  }
 
   return (
     <StyledTableList>
-      {isVisible && (
-        <DeteilsOfItem
-          element={elements}
-          indexOFElement={index}
-          handleCloseElement={handleVisibleElement}
-        />
-      )}
       <div className="table-wrapper">
         <table className="fl-table">
-          {' '}
+          {isVisible && (
+            <DeteilsOfItem
+              pageX={coordinataX}
+              pageY={coordinataY}
+              element={elements}
+              handleCloseElement={handleVisibleElement}
+            />
+          )}
           <thead>
             <tr>
               {props.columns.map((column, index) => {
-                return (
-                  <th key={index} onClick={handleSort(column.datakey)}>
-                    {column.name}
-                  </th>
-                )
+                return <th key={index}>{column.name}</th>
               })}
               <th></th>
             </tr>
           </thead>{' '}
           <tbody>
-            {tableData.map((task, index) => {
+            {dataArr.map((task, indexItem) => {
               return (
-                <tr key={index}>
+                <tr key={indexItem}>
                   {props.columns.map((column, index) => {
                     return <td key={index}>{task[column.datakey]}</td>
                   })}
@@ -194,15 +180,17 @@ const TableList = (props) => {
                     <FontAwesomeIcon
                       icon={faFileCirclePlus}
                       style={{ color: 'red', padding: 5 }}
-                      onClick={() => {
-                        handleVisibleElement(task, index, true)
+                      onClick={(e) => {
+                        handleGetCoordinat(e)
+                        handleVisibleElement(task, indexItem, true)
                       }}
                     />
+
                     <FontAwesomeIcon
                       icon={faTrash}
                       style={{ color: 'red', padding: 5 }}
                       onClick={() => {
-                        dispatch(deleteItemFromList(index))
+                        dispatch(deleteItemFromList(indexItem))
                       }}
                     />
                   </td>
